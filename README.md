@@ -1,0 +1,1 @@
+# terraform-modules-aws-lambda-s3-object-image-processor
