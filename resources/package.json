@@ -1,5 +1,5 @@
 {
-  "name": "lambda-image-processor",
+  "name": "lambda-s3-object-image-processor",
   "version": "1.0.0",
   "main": "src/index.ts",
   "dependencies": {
