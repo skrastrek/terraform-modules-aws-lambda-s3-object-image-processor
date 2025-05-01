@@ -11,7 +11,7 @@
     "@types/aws-lambda": "^8.10.148",
     "@types/node": "^22.14.0",
     "esbuild": "^0.25.2",
-    "sharp": "^0.33.5"
+    "sharp": "^0.34.1"
   },
   "scripts": {
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outdir=dist && cd sharp-bundle && npm ci --os=linux --cpu=arm64 sharp && cp -r node_modules ../dist/node_modules"
