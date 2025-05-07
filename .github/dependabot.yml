@@ -12,7 +12,7 @@ updates:
           - "sharp*"
       dev-dependencies:
         dependency-type: "development"
-        ignore:
+        exclude-patterns:
           - "sharp*"
 
   - package-ecosystem: "terraform"
