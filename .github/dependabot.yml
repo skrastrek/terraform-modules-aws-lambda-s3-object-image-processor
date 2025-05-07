@@ -6,6 +6,14 @@ updates:
       - "/resources/sharp-bundle"
     schedule:
       interval: "monthly"
+    groups:
+      sharp:
+        patterns:
+          - "sharp*"
+      dev-dependencies:
+        dependency-type: "development"
+        ignore:
+          - "sharp*"
 
   - package-ecosystem: "terraform"
     directory: "/"
