@@ -7,10 +7,10 @@
     "axios": "^1.11.0"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.858.0",
+    "@aws-sdk/client-s3": "^3.879.0",
     "@types/aws-lambda": "^8.10.152",
-    "@types/node": "^24.1.0",
-    "esbuild": "^0.25.8",
+    "@types/node": "^24.3.0",
+    "esbuild": "^0.25.9",
     "sharp": "^0.34.3"
   },
   "scripts": {
