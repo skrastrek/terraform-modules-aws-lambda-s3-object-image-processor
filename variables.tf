@@ -4,7 +4,7 @@ variable "name" {
 
 variable "description" {
   type    = string
-  default = null
+  default = "On the fly image processing of S3 objects."
 }
 
 variable "cloudwatch_log_group_retention_in_days" {
