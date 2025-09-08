@@ -5,7 +5,7 @@ import {
 import {S3ObjectEventHandler} from "./s3-object";
 
 import axios, {AxiosResponse} from "axios";
-import sharp, {Sharp} from "sharp";
+import sharp, {FormatEnum, JpegOptions, OutputOptions, PngOptions, Sharp, WebpOptions} from "sharp";
 
 import crypto from "crypto";
 
@@ -24,8 +24,6 @@ const QUERY_PARAM_QUALITY = process.env.QUERY_PARAM_QUALITY!!
 const s3Client = new S3Client()
 
 export const handler: S3ObjectEventHandler = async event => {
-    console.debug("Event:", JSON.stringify(event))
-
     const params: URLSearchParams = new URL(event.userRequest.url).searchParams
 
     const fit: ImageFit = params.has(QUERY_PARAM_FIT) ? params.get(QUERY_PARAM_FIT) as ImageFit : DEFAULT_IMAGE_FIT
@@ -36,7 +34,9 @@ export const handler: S3ObjectEventHandler = async event => {
     let originalImageResponse: AxiosResponse
 
     try {
+        console.debug(`Retrieving image: ${event.userRequest.url}.`)
         originalImageResponse = await axios.get(event.getObjectContext.inputS3Url, {responseType: 'arraybuffer'})
+        console.debug(`Successfully retrieved image.`)
     } catch (error) {
         console.warn(error)
         if (error.response?.status === 403 || error.response?.status === 404) {
@@ -62,11 +62,21 @@ export const handler: S3ObjectEventHandler = async event => {
     const originalImage: Sharp = sharp(originalImageResponse.data as Buffer)
     const originalImageContentType = originalImageResponse.headers["content-type"]!!.toString()
     const originalImageMetadata = await originalImage.metadata()
+    const originalImageFormat = originalImageMetadata.format
+
+    console.debug(`Processing image. Content type: ${originalImageContentType}. Fit: ${fit}. Width: ${width}. Height: ${height}. Quality: ${quality}.`)
 
     const processedImage = await originalImage
         .resize(width, height, {fit: fit})
-        .toFormat(originalImageMetadata.format!!, {quality: quality})
+        .toFormat(originalImageFormat,
+            {
+                ...defaultOutputOptions(originalImageFormat),
+                quality: quality,
+            }
+        )
         .toBuffer()
+
+    console.debug(`Successfully processed image.`)
 
     await s3Client.send(
         new WriteGetObjectResponseCommand({
@@ -82,6 +92,37 @@ export const handler: S3ObjectEventHandler = async event => {
 
     return
 }
+
+const pngDefaultOptions: PngOptions = {
+    progressive: true,
+    compressionLevel: 9,
+    effort: 10,
+}
+
+const webPDefaultOptions: WebpOptions = {
+    lossless: false,
+    effort: 6,
+}
+
+const jpgDefaultOptions: JpegOptions = {
+    progressive: true,
+}
+
+const defaultOutputOptions = (format: keyof FormatEnum): OutputOptions => {
+    switch (format) {
+        case "png":
+            return pngDefaultOptions
+
+        case "webp":
+            return webPDefaultOptions
+
+        case "jpg":
+            return jpgDefaultOptions
+
+        default:
+            return {}
+    }
+};
 
 const md5 = (buffer: Buffer): string =>
     crypto.createHash("md5").update(buffer).digest("hex")
