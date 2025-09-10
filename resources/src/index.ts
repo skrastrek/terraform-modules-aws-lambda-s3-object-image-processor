@@ -96,7 +96,7 @@ export const handler: S3ObjectEventHandler = async event => {
 const pngDefaultOptions: PngOptions = {
     progressive: true,
     compressionLevel: 9,
-    effort: 10,
+    effort: 8,
 }
 
 const webPDefaultOptions: WebpOptions = {
