@@ -14,6 +14,6 @@
     "sharp": "^0.34.5"
   },
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node22 --outdir=dist && cd sharp-bundle && npm ci --os=linux --cpu=arm64 sharp && cp -r node_modules ../dist/node_modules"
+    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node24 --outdir=dist && cd sharp-bundle && npm ci --os=linux --cpu=arm64 sharp && cp -r node_modules ../dist/node_modules"
   }
 }
