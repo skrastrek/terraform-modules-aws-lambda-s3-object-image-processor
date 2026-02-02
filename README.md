@@ -1,1 +1,1 @@
-# terraform-modules-aws-lambda-s3-object-image-processor
+# AWS Lambda S3 Object Image Processor Terraform Module
